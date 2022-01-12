@@ -47,7 +47,7 @@ function init() {
 
   var loader = new FBXLoader();
 
-  const path = require("./examples/2022-01-10_064937993814.fbx");
+  const path = require("./examples/trynbuyCatwalkcutnobump2.fbx");
 
   loader.load(path, function (object) {
     //loader.load( "trynbuycatwalk1", function ( object ) {
@@ -95,9 +95,10 @@ function init() {
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = true; // enable zoom
-  controls.minDistance = 100; // set zoom boundaries
-  controls.maxDistance = 400; // set zoom boundaries
-  controls.enablePan = false; // disable pan
+  //controls.minDistance = 100; // set zoom boundaries
+  //controls.maxDistance = 400; // set zoom boundaries
+  controls.enablePan = true; // disable pan
+  //controls.enablePan = false; // disable pan
   controls.target.set(0, 100, 0); // camera setting moving origin point
   controls.maxPolarAngle = Math.PI / 2; // do not go below ground
   controls.update();
