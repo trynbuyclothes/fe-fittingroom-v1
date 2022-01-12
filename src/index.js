@@ -5,14 +5,7 @@ import Stats from "./examples/jsm/libs/stats.module.js";
 import { OrbitControls } from "./examples/jsm/controls/OrbitControls.js";
 import { FBXLoader } from "./examples/jsm/loaders/FBXLoader.js";
 import { Reflector } from "./examples/jsm/libs/Reflector.js";
-
-document.getElementById("app").innerHTML = `
-<h1>Hello Vanilla!</h1>
-<div>
-  We use Parcel to bundle this sandbox, you can find more info about Parceld
-  <a href="https://parceljs.org" target="_blank" rel="noopener noreferrer">here</a>.
-</div>
-`;
+import { GUI } from "dat.gui";
 
 var container, stats, controls;
 var camera, scene, renderer, light, hemilight, spotlight;
@@ -26,7 +19,9 @@ init();
 animate();
 
 function init() {
-  var container = document.createElement("div");
+  //var container = document.createElement("div");
+  var container = document.getElementById("datGui");
+
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(
@@ -41,9 +36,40 @@ function init() {
   scene.background = new THREE.Color(0x101a31);
   //	scene.fog = new THREE.Fog( 0x101A31, 775, 1500 );
 
-  light = new THREE.HemisphereLight(0xffffff, 0x825b4d, 4);
+  //light = new THREE.HemisphereLight(0xffffff, 0x825b4d, 4);
+  //light.position.set(0, 500, 0);
+  //scene.add(light);
+
+  light = new THREE.AmbientLight(0xffffff, 1);
   light.position.set(0, 500, 0);
   scene.add(light);
+
+  const gui = new GUI();
+  //const gui = new GUI({ autoPlace: false });
+  const rollup = gui.addFolder("Ambient");
+  rollup.add(light, "visible");
+  rollup.add(light, "intensity", 0.0, 1.0);
+  rollup.add(light.color, "r", 0.0, 1.0);
+  rollup.add(light.color, "g", 0.0, 1.0);
+  rollup.add(light.color, "b", 0.0, 1.0);
+  rollup.open();
+
+  var div = document.getElementById("datGui");
+  div.appendChild(gui.domElement);
+
+  // light = new THREE.DirectionalLight( 0x825B4D );
+  // light.position.set( 0, 200, 100 );
+  // light.castShadow = true;
+  // light.shadow.camera.top = 180;
+  // light.shadow.camera.bottom = - 100;
+  // light.shadow.camera.left = - 120;
+  // light.shadow.camera.right = 120;
+  // scene.add( light );
+
+  // spotlight = new THREE.SpotLight(0xffa95c,4);
+  // scene.add(spotlight)
+
+  scene.add(new THREE.AxesHelper(500)); // Axis helper
 
   var loader = new FBXLoader();
 
@@ -63,15 +89,23 @@ function init() {
         child.receiveShadow = true;
         child.renderOrder = counter;
         counter = counter + 1;
-        //console.log("[DEBUG] Generated meshes:");
-        //console.log(child);
-        //console.log(child.name);
+        if (child.name === "Signage_wall") {
+          console.log("[DEBUG] Singage wall is detected");
+          child.material.map.image = "./examples/test.PNG";
+          child.material.shininess = 10;
+
+          console.log(child.material.map.name);
+          console.log(child);
+        }
+        // console.log("[DEBUG] Generated meshes:");
+        // console.log(child);
+        // console.log(child.name);
         child.material.transparent = false;
-        //console.log("[DEBUG] Child material:");
-        //console.log(Array.isArray(child.material));
+        // console.log("[DEBUG] Child material:");
+        // console.log(Array.isArray(child.material));
         if (Array.isArray(child.material)) {
           for (var i = 0; i < child.material.length; i++) {
-            //console.log(child.material[i]);
+            // console.log(child.material[i]);
             child.material[i].transparent = false;
           }
         } else {
