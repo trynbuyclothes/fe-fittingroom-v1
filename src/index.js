@@ -64,9 +64,9 @@ function init() {
 
   rollup.add(light, "visible");
   rollup.add(light, "intensity", 0.0, 10.0);
-  rollup.add(light.position, "x", -100, 500, 0.01);
-  rollup.add(light.position, "y", -100, 500, 0.01);
-  rollup.add(light.position, "z", -100, 500, 0.01);
+  rollup.add(light.position, "x", -500, 500, 0.01);
+  rollup.add(light.position, "y", -500, 500, 0.01);
+  rollup.add(light.position, "z", -500, 500, 0.01);
   rollup.open();
 
   const helper = new THREE.HemisphereLightHelper(light, 5);
@@ -116,9 +116,9 @@ function init() {
   const rollup5 = gui.addFolder("Directional");
   rollup5.add(light, "visible");
   rollup5.add(light, "intensity", 0.0, 10.0);
-  rollup5.add(light.position, "x", -100, 500, 0.01);
-  rollup5.add(light.position, "y", -100, 500, 0.01);
-  rollup5.add(light.position, "z", -100, 500, 0.01);
+  rollup5.add(light.position, "x", -500, 500, 0.01);
+  rollup5.add(light.position, "y", -500, 500, 0.01);
+  rollup5.add(light.position, "z", -500, 500, 0.01);
 
   rollup5.addColor(params1, "color").onChange(function (value1) {
     light.color.set(value1);
