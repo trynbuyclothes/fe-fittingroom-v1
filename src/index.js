@@ -47,7 +47,7 @@ function init() {
 
   var loader = new FBXLoader();
 
-  const path = require("./examples/trynbuyCatwalkcutnobump2.fbx");
+  const path = require("./examples/trynbuyCatwalkcutnobumpB.fbx");
 
   loader.load(path, function (object) {
     //loader.load( "trynbuycatwalk1", function ( object ) {
