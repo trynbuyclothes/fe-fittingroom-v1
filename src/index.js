@@ -7,6 +7,10 @@ import { FBXLoader } from "./examples/jsm/loaders/FBXLoader.js";
 import { Reflector } from "./examples/jsm/libs/Reflector.js";
 import { GUI } from "dat.gui";
 
+const params = {
+  color: "#101a31"
+};
+
 var container, stats, controls;
 var camera, scene, renderer, light, hemilight, spotlight;
 
@@ -19,8 +23,8 @@ init();
 animate();
 
 function init() {
-  //var container = document.createElement("div");
-  var container = document.getElementById("datGui");
+  var container = document.createElement("div");
+  //var container = document.getElementById("datGui");
 
   document.body.appendChild(container);
 
@@ -32,42 +36,104 @@ function init() {
   );
   camera.position.set(0, 150, 300);
 
+  const gui = new GUI({ autoPlace: true });
+
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x101a31);
+  //scene.background = new THREE.Color(0x101a31);
+  scene.background = new THREE.Color(params.color);
+
+  gui.addColor(params, "color").onChange(function (value) {
+    scene.background.set(value);
+  });
+
   //	scene.fog = new THREE.Fog( 0x101A31, 775, 1500 );
 
-  //light = new THREE.HemisphereLight(0xffffff, 0x825b4d, 4);
-  //light.position.set(0, 500, 0);
-  //scene.add(light);
+  // ------------ HemiSphere -----------
+  //                                sky color, ground color, intensity
+  light = new THREE.HemisphereLight(0xffffff, 0x825b4d, 4);
+  light.position.set(0, 500, 0);
+  scene.add(light);
+
+  // const data = {
+  //   color: light.color.getHex(),
+  //   groundColor: light.groundColor.getHex(),
+  // }
+
+  const rollup = gui.addFolder("Hemisphere");
+  //rollup.addColor(data, 'groundColor').onChange(() => { light.groundColor.setHex(Number(data.groundColor.toString().replace('#', '0x'))) });
+
+  rollup.add(light, "visible");
+  rollup.add(light, "intensity", 0.0, 10.0);
+  rollup.add(light.position, "x", -100, 500, 0.01);
+  rollup.add(light.position, "y", -100, 500, 0.01);
+  rollup.add(light.position, "z", -100, 500, 0.01);
+  rollup.open();
+
+  const helper = new THREE.HemisphereLightHelper(light, 5);
+  scene.add(helper);
+
+  // ------------ AmbientLight -----------
+  /* AmbientLight
+  This light globally illuminates all objects in the scene equally.
+  
+  This light cannot be used to cast shadows as it does not have a direction.
+  */
+
+  const params2 = {
+    color: "#ffffff"
+  };
 
   light = new THREE.AmbientLight(0xffffff, 1);
   light.position.set(0, 500, 0);
   scene.add(light);
 
-  const gui = new GUI();
-  //const gui = new GUI({ autoPlace: false });
-  const rollup = gui.addFolder("Ambient");
-  rollup.add(light, "visible");
-  rollup.add(light, "intensity", 0.0, 1.0);
-  rollup.add(light.color, "r", 0.0, 1.0);
-  rollup.add(light.color, "g", 0.0, 1.0);
-  rollup.add(light.color, "b", 0.0, 1.0);
-  rollup.open();
+  const rollup2 = gui.addFolder("Ambient");
+  rollup2.add(light, "visible");
+  rollup2.add(light, "intensity", 0.0, 10.0);
 
-  var div = document.getElementById("datGui");
-  div.appendChild(gui.domElement);
+  rollup2.addColor(params2, "color").onChange(function (value2) {
+    light.color.set(value2);
+  });
 
-  // light = new THREE.DirectionalLight( 0x825B4D );
-  // light.position.set( 0, 200, 100 );
-  // light.castShadow = true;
-  // light.shadow.camera.top = 180;
-  // light.shadow.camera.bottom = - 100;
-  // light.shadow.camera.left = - 120;
-  // light.shadow.camera.right = 120;
-  // scene.add( light );
+  rollup2.open();
+
+  // ------------ DirectionalLight -----------
+
+  const params1 = {
+    color: "#101a31"
+  };
+
+  //light = new THREE.DirectionalLight( 0x825B4D );
+  light = new THREE.DirectionalLight(params1.color);
+  light.position.set(0, 200, 100);
+  light.castShadow = true;
+  light.shadow.camera.top = 180;
+  light.shadow.camera.bottom = -100;
+  light.shadow.camera.left = -120;
+  light.shadow.camera.right = 120;
+  scene.add(light);
+
+  const rollup5 = gui.addFolder("Directional");
+  rollup5.add(light, "visible");
+  rollup5.add(light, "intensity", 0.0, 10.0);
+  rollup5.add(light.position, "x", -100, 500, 0.01);
+  rollup5.add(light.position, "y", -100, 500, 0.01);
+  rollup5.add(light.position, "z", -100, 500, 0.01);
+
+  rollup5.addColor(params1, "color").onChange(function (value1) {
+    light.color.set(value1);
+  });
+
+  const helper1 = new THREE.DirectionalLightHelper(light, 5);
+  scene.add(helper1);
+
+  // ------------ SpotLight -----------
 
   // spotlight = new THREE.SpotLight(0xffa95c,4);
   // scene.add(spotlight)
+
+  //var div = document.getElementById("datGui");
+  // div.appendChild(gui.domElement);
 
   scene.add(new THREE.AxesHelper(500)); // Axis helper
 
@@ -91,11 +157,11 @@ function init() {
         counter = counter + 1;
         if (child.name === "Signage_wall") {
           console.log("[DEBUG] Singage wall is detected");
-          child.material.map.image = "./examples/test.PNG";
-          child.material.shininess = 10;
+          //child.material.map.image = "./examples/test.PNG";
+          //child.material.shininess = 10;
 
-          console.log(child.material.map.name);
-          console.log(child);
+          //console.log(child.material.map.name);
+          //console.log(child);
         }
         // console.log("[DEBUG] Generated meshes:");
         // console.log(child);
@@ -126,6 +192,9 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight - navbar_height); //delete navbar height from inner window height
   renderer.shadowMap.enabled = true;
   container.appendChild(renderer.domElement);
+
+  const rollup3 = gui.addFolder("Renderer");
+  rollup3.add(renderer, "toneMappingExposure", 0.0, 10.0);
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = true; // enable zoom
