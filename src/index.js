@@ -84,7 +84,7 @@ function init() {
     color: "#ffffff"
   };
 
-  light = new THREE.AmbientLight(0xffffff);
+  light = new THREE.AmbientLight(0xffffff, 1);
   light.position.set(0, 500, 0);
   scene.add(light);
 
@@ -173,7 +173,7 @@ function init() {
   var loader = new FBXLoader();
 
   //const path = require("./examples/AllNew.fbx");
-  const path = require("./examples/2022-01-19_092606940397.fbx");
+  const path = require("./examples/TNBFINAL.fbx");
 
   loader.load(path, function (object) {
     //loader.load( "trynbuycatwalk1", function ( object ) {
